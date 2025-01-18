@@ -1,0 +1,15 @@
+flask
+gdown
+tesseract-ocr-rus
+jinja2
+libtesseract-dev
+pytesseract
+Spire.Pdf
+easyocr
+opencv-python-headless
+matplotlib
+pandas
+python-docx
+psycopg2-binary
+requests
+numpy

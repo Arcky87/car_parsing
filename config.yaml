@@ -1,0 +1,12 @@
+google_drive:
+  folder_url: "https://drive.google.com/drive/folders/1yA5HP32L-ZIMQctuPcU_cMaA3Xnaqek_"
+  download_dir: "downloaded_pdfs"
+
+email:
+  smtp_server: "smtp.gmail.com"
+  smtp_port: 587
+  sender_email: "illych.yakunin@gmail.com"
+  sender_password: "your_app_password"
+  recipients:
+    cargo: "cargo-web@o2rus.ru"
+    tech: "o2rus.tech@gmail.com"
