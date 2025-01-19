@@ -1,0 +1,44 @@
+google_drive:
+  folder_url: "https://drive.google.com/drive/folders/1yA5HP32L-ZIMQctuPcU_cMaA3Xnaqek_"
+  download_dir: "downloaded_pdfs/RDF"
+
+email:
+  smtp_server: "smtp.gmail.com"
+  smtp_port: 587
+  sender_email: "your.email@gmail.com"
+  sender_password: "your-app-password"
+  recipients:
+    cargo: "cargo-web@example.com"
+    tech: "tech@example.com"
+  alerts:
+    fine_threshold: 5000
+    send_daily_stats: true
+    include_images: true
+
+ocr:
+  tesseract:
+    lang: "rus"
+    psm: 7
+    whitelist: "АВЕКМНОРСТУХ0123456789"
+
+image_processing:
+  resize_factor: 5
+  blur_kernel_size: 3
+  clahe:
+    clip_limit: 2.0
+    tile_grid_size: [8, 8]
+  denoise:
+    h: 10
+    template_window_size: 7
+    search_window_size: 21
+  threshold:
+    block_size: 151
+    C: 2
+
+output:
+  docx:
+    table_filename: "output_table.docx"
+    stats_filename: "daily_statistics.docx"
+    combined_filename: "combined_report.docx"
+    image_width: 1.5
+

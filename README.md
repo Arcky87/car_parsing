@@ -1,92 +1,121 @@
-Here's a Russian version of README.md:
+# Car Plate Parser - Система обработки штрафов ПДД
 
-```markdown
-# Обработчик PDF-файлов штрафов ГИБДД
+## Описание
+Система автоматизированной обработки PDF-документов со штрафами ПДД. Программа извлекает информацию из PDF-файлов, распознает номера автомобилей с помощью OCR и формирует отчеты с возможностью email-уведомлений.
 
-Программа для автоматической обработки PDF-файлов со штрафами ГИБДД, извлечения информации и отправки уведомлений.
+## Функциональные возможности
+- Автоматическая загрузка PDF-файлов из Google Drive
+- Извлечение текста и изображений из PDF
+- Распознавание автомобильных номеров (OCR)
+- Формирование отчетов в формате DOCX
+- Отправка email-уведомлений о нарушениях
+- Генерация ежедневной статистики
 
-## Установка
+## Требования к системе
+- Python 3.8 или выше
+- Tesseract OCR
+- Достаточно свободного места на диске для загрузки и обработки файлов
+- Доступ в интернет для загрузки файлов и отправки email
 
-1. Установите зависимости системы:
+### Установка зависимостей
+
+#### Ubuntu/Debian
 ```bash
-sudo apt update
-sudo apt install tesseract-ocr-rus libtesseract-dev python3-pip
-```
+# Установка системных зависимостей
+sudo apt-get update
+sudo apt-get install -y python3-pip python3-venv
+sudo apt-get install -y tesseract-ocr tesseract-ocr-rus
 
-2. Установите необходимые Python-пакеты:
-```bash
+# Создание виртуального окружения
+python3 -m venv venv
+source venv/bin/activate
+
+# Установка Python-зависимостей
 pip install -r requirements.txt
 ```
-
 ## Настройка
 
-1. Откройте файл `config.yaml` и настройте:
-   - URL папки Google Drive с PDF-файлами
-   - Данные для отправки email (SMTP-сервер, логин, пароль)
-   - Адреса получателей уведомлений
+### 1. Конфигурация
+Создайте файл `config/config.yaml` со следующими настройками:
 
-Пример конфигурации:
 ```yaml
 google_drive:
-  folder_url: "https://drive.google.com/drive/folders/your_folder_id"
-  download_dir: "downloaded_pdfs"
+  folder_url: "ваша_ссылка_на_папку_google_drive"
+  download_dir: "downloaded_pdfs/RDF"
 
 email:
   smtp_server: "smtp.gmail.com"
   smtp_port: 587
-  sender_email: "your_email@gmail.com"
-  sender_password: "your_app_password"
+  sender_email: "ваша.почта@gmail.com"
+  sender_password: "ваш_пароль_приложения"
   recipients:
-    cargo: "cargo-web@o2rus.ru"
-    tech: "o2rus.tech@gmail.com"
+    cargo: "получатель1@example.com"
+    tech: "получатель2@example.com"
+  alerts:
+    fine_threshold: 5000
+    send_daily_stats: true
+    include_images: true
+
+ocr:
+  tesseract:
+    lang: "rus"
+    psm: 7
+    whitelist: "АВЕКМНОРСТУХ0123456789"
+    path: "путь_к_tesseract"  # например: "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 ```
 
-## Использование
+### 2. Структура проекта
+```
+car_plate_parser/
+├── src/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── processors.py
+│   ├── exceptions.py
+│   └── ocr/
+│       ├── __init__.py
+│       └── recognizer.py
+├── config/
+│   └── config.yaml
+├── requirements.txt
+└── README.md
+```
 
-Запустите программу командой:
+## Запуск приложения
+
+### Метод 1: Прямой запуск
 ```bash
-python main.py
+python -m src.main
 ```
 
-## Функциональность
-
-- Извлечение текста из PDF-файлов
-- Распознавание номеров автомобилей с помощью OCR
-- Определение суммы штрафа
-- Отправка email-уведомлений
-- Создание сводной таблицы в формате DOCX
-
-## Алгоритм работы
-
-1. Программа сканирует указанную папку на наличие PDF-файлов
-2. Из каждого PDF извлекается:
-   - Текстовая информация о штрафе
-   - Фотография автомобиля
-   - Изображение номерного знака
-3. Выполняется OCR номерного знака
-4. Создается сводная таблица с результатами
-5. Отправляются уведомления:
-   - На cargo-web@o2rus.ru, если номер распознан верно и штраф > 5000 руб
-   - На o2rus.tech@gmail.com в остальных случаях
-
-## Структура проекта
-
-```
-pdf_processor/
-├── README.md           # Документация
-├── requirements.txt    # Зависимости Python
-├── config.yaml        # Конфигурационный файл
-├── main.py           # Основной скрипт
-└── utils.py          # Вспомогательные функции
+### Метод 2: Установка как пакет
+```bash
+pip install -e .
+car-plate-parser
 ```
 
-## Возможные проблемы
+## Логирование и отчеты
 
-1. Если возникает ошибка с Tesseract:
-   - Проверьте установку tesseract-ocr-rus
-   - Убедитесь, что путь к Tesseract правильно прописан в системе
+### Логи
+- Основной лог: `app.log`
+- Уровень логирования настраивается в конфигурации
 
-2. При проблемах с отправкой email:
+### Отчеты
+- Таблица нарушений: `output_table.docx`
+- Ежедневная статистика: `daily_statistics.docx`
+
+## Устранение неполадок
+
+### Частые проблемы и решения
+
+1. Ошибка "Tesseract not found":
+   - Проверьте путь к Tesseract в config.yaml
+   - Убедитесь, что Tesseract установлен корректно
+
+2. Ошибки при загрузке файлов:
+   - Проверьте доступность URL Google Drive
+   - Проверьте права доступа к папке загрузки
+
+3. Ошибки отправки email:
    - Проверьте настройки SMTP
-   - Для Gmail используйте специальный пароль приложения
-   - Проверьте доступ к SMTP-серверу
+   - Убедитесь, что пароль приложения корректен
