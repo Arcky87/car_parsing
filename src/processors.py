@@ -105,17 +105,16 @@ class PDFProcessor:
         try:
             # Your existing text processing logic here
             # This is a placeholder - implement according to your specific needs
-            info = {
-                'ПОСТАНОВЛЕНИЕ': '',
-                'дата_нарушения': '',
-                'время_нарушения': '',
-                'адрес': '',
-                'номер_тс': '',
-                'сумма_штрафа': '',
-                'ИГР': ''
-            }
+            info = {}
             
-            # Add your text parsing logic here
+            info['ПОСТАНОВЛЕНИЕ'] = re.search(r'ПОСТАНОВЛЕНИЕ (\d+)', text).group(1) if re.search(r'ПОСТАНОВЛЕНИЕ (\d+)', text) else None
+            info['дата_нарушения'] = re.search(r'УСТАНОВИЛ:\n.*(\d{2}\.\d{2}\.\d{4})', text).group(1) if re.search(r'УСТАНОВИЛ:\n.*(\d{2}\.\d{2}\.\d{4})', text) else None
+            info['время_нарушения'] = re.search(r'(\d{2}:\d{2}:\d{2})', text).group(1) if re.search(r'(\d{2}:\d{2}:\d{2})', text) else None
+            info['адрес'] = re.sub(r'\n\s+', ' ', re.search(r'по адресу(.*?)водитель', text, re.DOTALL).group(1)).strip() if re.search(r'по адресу(.*?)водитель', text, re.DOTALL) else None
+            info['номер_тс'] = re.search(r'государственный регистрационный знак (\w+)', text).group(1) if re.search(r'государственный регистрационный знак (\w+)', text) else None
+            info['сумма_штрафа'] = re.search(r'штрафа в размере (\b(\d+(?:[\xa0 ]\d{3})*)\b) руб', text).group(1).replace('\xa0', '') #if re.search(r'штрафа в размере (\d+) руб', text) else None
+            info['номер_свидетельства'] = re.search(r'свидетельством о регистрации ТС №(\d+)', text).group(1) if re.search(r'свидетельством о регистрации ТС №(\d+)', text) else None
+            info['ИГР'] = re.search(r'Идентификация государственного регистрационного знака:\s*(([А-Я]{1}\d{3}[А-Я]{2}\d{2,3})|([А-Я]{2}\d{4}\d{2,3}))', text).group(1) if re.search(r'Идентификация государственного регистрационного знака:\s*(([А-Я]{1}\d{3}[А-Я]{2}\d{2,3})|([А-Я]{2}\d{4}\d{2,3}))', text).group(1) else None
             
             return info
         except Exception as e:
